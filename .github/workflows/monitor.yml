@@ -1,6 +1,6 @@
 name: Njuskalo Monitor
 
-# Public repo = unlimited free Actions minutes. Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+# Public repo = unlimited free Actions minutes. Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_EXTRA_CHATS
 on:
   schedule:
     - cron: "35 * * * *"
@@ -33,6 +33,7 @@ jobs:
           TZ: Europe/Zagreb
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_EXTRA_CHATS: ${{ secrets.TELEGRAM_EXTRA_CHATS }}
         run: python monitor.py
 
       - name: Commit DB changes
