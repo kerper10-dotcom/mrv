@@ -381,29 +381,17 @@ def run():
 
         browser.close()
 
-    # Build status footer - always sent so we know the bot is still running
-    stats = get_db_stats()
-    now_str = time.strftime('%d.%m.%Y. %H:%M')
-    status = (
-        f"\n━━━━━━━━━━━━━━━━━━━━\n"
-        f"✅ <b>Scan završen</b>\n"
-        f"🕒 {now_str}\n"
-        f"🆕 Novi oglasi: {total_new}\n"
-        f"📦 Ukupno u bazi: {stats['total']}"
-    )
-    telegram_body += status
-
-    # Always send report (even on quiet runs) so you know the bot is alive
-    if not first_run and telegram_configured():
+    if not first_run and total_new > 0 and telegram_configured():
         header = (
-            f"📊 <b>NJUSKALO — MRVICA SCAN REPORT</b>\n"
-            f"📅 {now_str}\n"
+            f"🆕 <b>NJUSKALO — MRVICA</b>\n"
+            f"📅 {time.strftime('%d.%m.%Y. %H:%M')}\n"
             f"━━━━━━━━━━━━━━━━━━━━"
         )
         send_telegram(header + telegram_body)
     elif first_run and total_new > 0:
         print(f"\n[i] Inicijalno spremljeno {total_new} oglasa u bazu (bez obavijesti)")
 
+    stats = get_db_stats()
     print(f"\n{'=' * 60}")
     print(f"  GOTOVO! Novih: {total_new} | Baza ukupno: {stats['total']}")
     for cat, cnt in sorted(stats.get("by_category", {}).items()):
