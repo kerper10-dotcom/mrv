@@ -44,7 +44,7 @@ jobs:
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
           git add njuskalo_mrvica.db
           if ! git diff --staged --quiet; then
-            git commit -m "Update njuskalo.db [skip ci]"
+            git commit -m "Update njuskalo_mrvica.db [skip ci]"
             git push
           else
             echo "No DB changes to commit"
