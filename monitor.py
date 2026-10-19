@@ -184,6 +184,8 @@ def scrape_listings(page, url: str, pages: int) -> list[dict]:
             () => {
                 const results = [];
                 document.querySelectorAll('li.listing, .EntityList-item--Regular article.entity-body').forEach(article => {
+                    // Izlog salona (npr. Auto Hrvatska) nema datum i miješa druge modele.
+                    if (article.matches('li.listing') && !article.querySelector('time.createdAt')) return;
                     const link = article.querySelector('h3.title a.link, h3.entity-title a.link, h3 a.link');
                     if (!link) return;
                     const titleEl = link.querySelector('span');
