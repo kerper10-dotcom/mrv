@@ -171,23 +171,28 @@ def scrape_listings(page, url: str, pages: int) -> list[dict]:
 
         time.sleep(1.5)
 
-        if "shield" in page.content()[:5000].lower():
+        page_title = page.title().lower()
+        if (
+            "shieldsquare" in page_title
+            or "captcha" in page_title
+            or "shield" in page.content()[:5000].lower()
+        ):
             print(f"    [!] CAPTCHA na str.{p}, preskacem URL")
             break
 
         ads = page.evaluate("""
             () => {
                 const results = [];
-                document.querySelectorAll('.EntityList-item--Regular article.entity-body').forEach(article => {
-                    const link = article.querySelector('h3.entity-title a.link');
+                document.querySelectorAll('li.listing, .EntityList-item--Regular article.entity-body').forEach(article => {
+                    const link = article.querySelector('h3.title a.link, h3.entity-title a.link, h3 a.link');
                     if (!link) return;
                     const titleEl = link.querySelector('span');
                     const title = titleEl ? titleEl.textContent.trim() : link.textContent.trim();
                     const href = link.getAttribute('href');
                     const nameId = link.getAttribute('name');
-                    const priceEl = article.querySelector('.price--hrk, strong.price');
+                    const priceEl = article.querySelector('.price--hrk, strong.price, .price');
                     const price = priceEl ? priceEl.textContent.trim() : '';
-                    const dateEl = article.querySelector('.date--full, .entity-pub-date time');
+                    const dateEl = article.querySelector('.date--full, .entity-pub-date time, time');
                     const pubDate = dateEl ? dateEl.textContent.trim() : '';
 
                     let adId = nameId ? parseInt(nameId) : null;
